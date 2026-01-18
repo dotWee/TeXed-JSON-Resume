@@ -14,58 +14,50 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Install TeX Live
-        uses: zauguin/install-texlive@v4
+      - name: Install dependencies and run tests
+        uses: xu-cheng/texlive-action@v2
         with:
-          packages: >
-            scheme-basic
-            luatex
-            luaotfload
-            fontspec
-            enumitem
-            xparse
-            l3kernel
-            l3packages
-            hyperref
-            geometry
-            lm
-            etoolbox
-            iftex
-            ifluatex
-            kvsetkeys
-            kvdefinekeys
-            kvoptions
-            ltxcmds
-            infwarerr
-            intcalc
-            bigintcalc
-            bitset
-            atbegshi
-            atveryend
-            rerunfilecheck
-            uniquecounter
-            refcount
-            hycolor
-            letltxmacro
-            auxhook
-            pdfescape
-            stringenc
-            pdftexcmds
-            url
-
-      - name: Install curl
-        run: sudo apt-get update && sudo apt-get install -y curl
-
-      - name: Run tests
-        run: |
-          cd tests
-          chmod +x run-tests.sh
-          ./run-tests.sh --skip-network
+          scheme: scheme-basic
+          run: |
+            # Install required TeX Live packages
+            tlmgr install \
+              luatex luaotfload fontspec enumitem \
+              l3kernel l3packages hyperref geometry lm etoolbox iftex \
+              kvsetkeys kvdefinekeys kvoptions ltxcmds \
+              infwarerr intcalc bigintcalc bitset \
+              atbegshi atveryend rerunfilecheck \
+              uniquecounter refcount hycolor letltxmacro \
+              auxhook pdfescape stringenc pdftexcmds url
+            
+            # Install curl
+            apk add --no-cache curl
+            
+            # Run tests (skip network tests)
+            cd tests
+            chmod +x run-tests.sh
+            ./run-tests.sh --skip-network
 
       - name: Run network tests
-        run: |
-          cd tests
-          ./run-tests.sh
+        uses: xu-cheng/texlive-action@v2
+        with:
+          scheme: scheme-basic
+          run: |
+            # Install required TeX Live packages
+            tlmgr install \
+              luatex luaotfload fontspec enumitem \
+              l3kernel l3packages hyperref geometry lm etoolbox iftex \
+              kvsetkeys kvdefinekeys kvoptions ltxcmds \
+              infwarerr intcalc bigintcalc bitset \
+              atbegshi atveryend rerunfilecheck \
+              uniquecounter refcount hycolor letltxmacro \
+              auxhook pdfescape stringenc pdftexcmds url
+            
+            # Install curl
+            apk add --no-cache curl
+            
+            # Run network tests
+            cd tests
+            ./run-tests.sh
         continue-on-error: true
 
   build:
@@ -76,53 +68,28 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Install TeX Live
-        uses: zauguin/install-texlive@v4
+      - name: Build LaTeX document
+        uses: xu-cheng/texlive-action@v2
         with:
-          packages: >
-            scheme-basic
-            luatex
-            luaotfload
-            fontspec
-            enumitem
-            xparse
-            l3kernel
-            l3packages
-            hyperref
-            geometry
-            lm
-            etoolbox
-            iftex
-            ifluatex
-            kvsetkeys
-            kvdefinekeys
-            kvoptions
-            ltxcmds
-            infwarerr
-            intcalc
-            bigintcalc
-            bitset
-            atbegshi
-            atveryend
-            rerunfilecheck
-            uniquecounter
-            refcount
-            hycolor
-            letltxmacro
-            auxhook
-            pdfescape
-            stringenc
-            pdftexcmds
-            url
-
-      - name: Install curl
-        run: sudo apt-get update && sudo apt-get install -y curl
-
-      - name: Build example PDF
-        run: |
-          cd example
-          lualatex --shell-escape --interaction=nonstopmode example.tex || true
-          lualatex --shell-escape --interaction=nonstopmode example.tex || true
+          scheme: scheme-basic
+          run: |
+            # Install required TeX Live packages
+            tlmgr install \
+              luatex luaotfload fontspec enumitem \
+              l3kernel l3packages hyperref geometry lm etoolbox iftex \
+              kvsetkeys kvdefinekeys kvoptions ltxcmds \
+              infwarerr intcalc bigintcalc bitset \
+              atbegshi atveryend rerunfilecheck \
+              uniquecounter refcount hycolor letltxmacro \
+              auxhook pdfescape stringenc pdftexcmds url
+            
+            # Install curl
+            apk add --no-cache curl
+            
+            # Build example PDF (run twice for proper references)
+            cd example
+            lualatex --shell-escape --interaction=nonstopmode example.tex || true
+            lualatex --shell-escape --interaction=nonstopmode example.tex || true
 
       - name: Upload example PDF
         uses: actions/upload-artifact@v4
