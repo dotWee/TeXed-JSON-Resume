@@ -23,7 +23,6 @@ jobs:
             luaotfload
             fontspec
             enumitem
-            xparse
             l3kernel
             l3packages
             hyperref
@@ -31,7 +30,6 @@ jobs:
             lm
             etoolbox
             iftex
-            ifluatex
             kvsetkeys
             kvdefinekeys
             kvoptions
@@ -85,7 +83,6 @@ jobs:
             luaotfload
             fontspec
             enumitem
-            xparse
             l3kernel
             l3packages
             hyperref
@@ -93,7 +90,6 @@ jobs:
             lm
             etoolbox
             iftex
-            ifluatex
             kvsetkeys
             kvdefinekeys
             kvoptions

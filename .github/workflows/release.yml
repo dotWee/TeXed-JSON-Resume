@@ -16,6 +16,16 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v6
 
+      - name: Get version from tag
+        id: get_version
+        run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+
+      - name: Update version in package
+        run: |
+          VERSION=${{ steps.get_version.outputs.VERSION }}
+          DATE=$(date +%Y/%m/%d)
+          sed -i "s/\[.*JSON Resume renderer/[$DATE v$VERSION JSON Resume renderer/" jsonresume.sty
+
       - name: Install TeX Live
         uses: zauguin/install-texlive@v4
         with:
@@ -25,7 +35,6 @@ jobs:
             luaotfload
             fontspec
             enumitem
-            xparse
             l3kernel
             l3packages
             hyperref
@@ -33,7 +42,6 @@ jobs:
             lm
             etoolbox
             iftex
-            ifluatex
             kvsetkeys
             kvdefinekeys
             kvoptions
@@ -57,16 +65,6 @@ jobs:
 
       - name: Install tools
         run: sudo apt-get update && sudo apt-get install -y curl zip
-
-      - name: Get version from tag
-        id: get_version
-        run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
-
-      - name: Update version in package
-        run: |
-          VERSION=${{ steps.get_version.outputs.VERSION }}
-          DATE=$(date +%Y/%m/%d)
-          sed -i "s/\[.*JSON Resume renderer/[$DATE v$VERSION JSON Resume renderer/" jsonresume.sty
 
       - name: Build example PDF
         run: |
