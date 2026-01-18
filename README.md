@@ -213,15 +213,15 @@ The project uses GitHub Actions for CI/CD:
 
 The release workflow requires the following GitHub repository secrets for automatic CTAN submission:
 
-- `CTAN_UPLOADER_NAME` - Your full name as the CTAN uploader (e.g., "John Doe")
-- `CTAN_EMAIL` - Your email address for CTAN correspondence (must match your CTAN account email if you have one)
+- `CTAN_UPLOADER_NAME` - Your full name as the CTAN uploader (e.g., "John Doe"). This is used for CTAN submission records.
+- `CTAN_EMAIL` - Your email address for CTAN correspondence. If updating an existing CTAN package, this should match the email associated with your CTAN account.
 
 To add these secrets:
 1. Go to your repository Settings > Secrets and variables > Actions
 2. Click "New repository secret"
 3. Add both `CTAN_UPLOADER_NAME` and `CTAN_EMAIL`
 
-**Note**: The automatic CTAN submission will continue even if it fails, ensuring the GitHub release is always created. Check the workflow logs if the CTAN submission needs attention.
+**Note**: The GitHub release creation will continue even if CTAN submission fails, ensuring your release is always published. Check the workflow logs if the CTAN submission needs attention.
 
 #### Release Steps
 
