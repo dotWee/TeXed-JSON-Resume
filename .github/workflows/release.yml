@@ -26,35 +26,57 @@ jobs:
           DATE=$(date +%Y/%m/%d)
           sed -i "s/\[.*JSON Resume renderer/[$DATE v$VERSION JSON Resume renderer/" jsonresume.sty
 
-      - name: Build and test with TeX Live
-        uses: xu-cheng/texlive-action@v2.0.0
+      - name: Install TeX Live
+        uses: zauguin/install-texlive@v4
         with:
-          scheme: scheme-basic
-          run: |
-            # Install required TeX Live packages
-            tlmgr install \
-              luatex luaotfload fontspec enumitem \
-              l3kernel l3packages hyperref geometry lm etoolbox iftex \
-              kvsetkeys kvdefinekeys kvoptions ltxcmds \
-              infwarerr intcalc bigintcalc bitset \
-              atbegshi atveryend rerunfilecheck \
-              uniquecounter refcount hycolor letltxmacro \
-              auxhook pdfescape stringenc pdftexcmds url
-            
-            # Install curl
-            apk add --no-cache curl
-            
-            # Build example PDF (run twice for proper references)
-            cd example
-            lualatex --shell-escape --interaction=nonstopmode example.tex || true
-            lualatex --shell-escape --interaction=nonstopmode example.tex || true
-            cd ..
-            
-            # Run tests
-            cd tests
-            chmod +x run-tests.sh
-            ./run-tests.sh --skip-network
-            cd ..
+          packages: >
+            scheme-basic
+            luatex
+            luaotfload
+            fontspec
+            enumitem
+            l3kernel
+            l3packages
+            hyperref
+            geometry
+            lm
+            etoolbox
+            iftex
+            kvsetkeys
+            kvdefinekeys
+            kvoptions
+            ltxcmds
+            infwarerr
+            intcalc
+            bigintcalc
+            bitset
+            atbegshi
+            atveryend
+            rerunfilecheck
+            uniquecounter
+            refcount
+            hycolor
+            letltxmacro
+            auxhook
+            pdfescape
+            stringenc
+            pdftexcmds
+            url
+
+      - name: Install tools
+        run: sudo apt-get update && sudo apt-get install -y curl zip
+
+      - name: Build example PDF
+        run: |
+          cd example
+          lualatex --shell-escape --interaction=nonstopmode example.tex || true
+          lualatex --shell-escape --interaction=nonstopmode example.tex || true
+
+      - name: Run tests
+        run: |
+          cd tests
+          chmod +x run-tests.sh
+          ./run-tests.sh --skip-network
 
       - name: Create CTAN package
         run: |
