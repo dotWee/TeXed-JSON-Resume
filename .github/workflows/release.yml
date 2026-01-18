@@ -27,7 +27,7 @@ jobs:
           sed -i "s/\[.*JSON Resume renderer/[$DATE v$VERSION JSON Resume renderer/" jsonresume.sty
 
       - name: Build and test with TeX Live
-        uses: xu-cheng/texlive-action@v2
+        uses: xu-cheng/texlive-action@v2.0.0
         with:
           scheme: scheme-basic
           run: |
