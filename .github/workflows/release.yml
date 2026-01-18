@@ -105,3 +105,15 @@ jobs:
             Upload `jsonresume-ctan.zip` to https://ctan.org/upload
           draft: false
           prerelease: false
+
+      - name: Submit to CTAN
+        uses: paolobrasolin/ctan-submit-action@v1
+        with:
+          action: upload
+          file_path: dist/jsonresume-ctan.zip
+          fields: |
+            update: "true"
+            pkg: jsonresume
+            version: ${{ steps.get_version.outputs.VERSION }}
+            uploader: ${{ secrets.CTAN_UPLOADER_NAME }}
+            email: ${{ secrets.CTAN_EMAIL }}

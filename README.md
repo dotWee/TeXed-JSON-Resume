@@ -209,6 +209,20 @@ The project uses GitHub Actions for CI/CD:
 
 ### Creating a Release
 
+#### Prerequisites
+
+The release workflow requires the following GitHub repository secrets for automatic CTAN submission:
+
+- `CTAN_UPLOADER_NAME` - Your name as the CTAN uploader
+- `CTAN_EMAIL` - Your email address for CTAN correspondence
+
+To add these secrets:
+1. Go to your repository Settings > Secrets and variables > Actions
+2. Click "New repository secret"
+3. Add both `CTAN_UPLOADER_NAME` and `CTAN_EMAIL`
+
+#### Release Steps
+
 1. Update the version in `jsonresume.sty` if needed
 2. Commit all changes
 3. Create and push a version tag:
@@ -221,10 +235,29 @@ The project uses GitHub Actions for CI/CD:
    - Build the example PDF
    - Create CTAN package
    - Create a GitHub release with all artifacts
+   - Submit the package to CTAN automatically
 
 ## Publishing to CTAN
 
-### Prerequisites
+### Automatic Submission (Recommended)
+
+The release workflow automatically submits packages to CTAN when a new version tag is pushed. This requires:
+
+1. **GitHub Secrets Configured** - `CTAN_UPLOADER_NAME` and `CTAN_EMAIL` must be set in repository settings
+2. **Package Already on CTAN** - The automatic submission uses `update: "true"` for existing packages
+
+When you create a release (see "Creating a Release" above), the workflow will:
+- Build the CTAN package
+- Create a GitHub release
+- Automatically submit to CTAN with the configured credentials
+
+**Note**: For first-time CTAN submissions, you'll need to use the manual process below to provide additional metadata (author, license, topics, etc.).
+
+### Manual Submission
+
+If you need to submit manually (e.g., first-time submission or to provide additional metadata):
+
+#### Prerequisites
 
 Before submitting to CTAN, ensure:
 
@@ -233,7 +266,7 @@ Before submitting to CTAN, ensure:
 3. **License is clear** - MIT license file included
 4. **Example works** - Example PDF generates correctly
 
-### Submission Steps
+#### Submission Steps
 
 1. **Build the CTAN package**:
    ```bash
@@ -271,12 +304,16 @@ Once accepted on CTAN:
 
 ### Updating the Package
 
-For updates, follow the same process:
+For updates, the automatic submission will handle CTAN updates when you create a new release:
 
-1. Increment version number
-2. Create a new git tag
-3. Submit updated package to CTAN
-4. In the upload form, select "Update" instead of "New package"
+1. Increment version number in `jsonresume.sty`
+2. Create and push a new git tag (e.g., `v1.1.0`)
+3. The release workflow automatically submits the update to CTAN
+
+For manual updates:
+1. Build the package with `./scripts/build-ctan.sh <version>`
+2. Go to https://ctan.org/upload
+3. In the upload form, select "Update" instead of "New package"
 
 ## License
 
