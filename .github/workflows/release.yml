@@ -108,6 +108,7 @@ jobs:
 
       - name: Submit to CTAN
         uses: paolobrasolin/ctan-submit-action@v1
+        continue-on-error: true
         with:
           action: upload
           file_path: dist/jsonresume-ctan.zip
