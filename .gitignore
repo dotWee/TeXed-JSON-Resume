@@ -1,4 +1,7 @@
+# macOS
 .DS_Store
+
+# LaTeX auxiliary files
 *.out
 *.aux
 *.log
@@ -7,4 +10,17 @@
 *.synctex.gz
 *.synctex(busy)
 *.synctex.gz(busy)
-*.synctex.gz(busy)
+*.toc
+*.lof
+*.lot
+*.bbl
+*.blg
+
+# Build artifacts
+dist/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo

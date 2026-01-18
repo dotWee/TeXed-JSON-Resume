@@ -1,0 +1,109 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install TeX Live
+        uses: zauguin/install-texlive@v3
+        with:
+          packages: >
+            scheme-basic
+            luatex
+            luaotfload
+            fontspec
+            enumitem
+            xparse
+            l3kernel
+            l3packages
+            hyperref
+            geometry
+            lm
+            etoolbox
+            iftex
+            ifluatex
+            kvsetkeys
+            kvdefinekeys
+            kvoptions
+            ltxcmds
+            infwarerr
+            intcalc
+            bigintcalc
+            bitset
+            atbegshi
+            atveryend
+            rerunfilecheck
+            uniquecounter
+            refcount
+            hycolor
+            letltxmacro
+            auxhook
+            pdfescape
+            stringenc
+            pdftexcmds
+            url
+
+      - name: Install tools
+        run: sudo apt-get update && sudo apt-get install -y curl zip
+
+      - name: Get version from tag
+        id: get_version
+        run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+
+      - name: Update version in package
+        run: |
+          VERSION=${{ steps.get_version.outputs.VERSION }}
+          DATE=$(date +%Y/%m/%d)
+          sed -i "s/\[.*JSON Resume renderer/[$DATE v$VERSION JSON Resume renderer/" jsonresume.sty
+
+      - name: Build example PDF
+        run: |
+          cd example
+          lualatex --shell-escape --interaction=nonstopmode example.tex || true
+          lualatex --shell-escape --interaction=nonstopmode example.tex || true
+
+      - name: Run tests
+        run: |
+          cd tests
+          chmod +x run-tests.sh
+          ./run-tests.sh --skip-network
+
+      - name: Create CTAN package
+        run: |
+          chmod +x scripts/build-ctan.sh
+          ./scripts/build-ctan.sh ${{ steps.get_version.outputs.VERSION }}
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            dist/jsonresume.zip
+            dist/jsonresume-ctan.zip
+            example/example.pdf
+          body: |
+            ## JSON Resume LaTeX Package v${{ steps.get_version.outputs.VERSION }}
+            
+            ### Downloads
+            - `jsonresume.zip` - Package files for manual installation
+            - `jsonresume-ctan.zip` - CTAN submission package
+            - `example.pdf` - Example output
+            
+            ### Installation
+            Extract `jsonresume.zip` to your project directory or to `~/texmf/tex/latex/jsonresume/`
+            
+            ### CTAN Submission
+            Upload `jsonresume-ctan.zip` to https://ctan.org/upload
+          draft: false
+          prerelease: false

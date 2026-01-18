@@ -186,6 +186,98 @@ cd tests
 ./run-tests.sh --skip-network
 ```
 
+## Development
+
+### Building Locally
+
+Build the CTAN package locally:
+
+```bash
+./scripts/build-ctan.sh 1.0.0
+```
+
+This creates:
+- `dist/jsonresume.zip` - Package for manual installation
+- `dist/jsonresume-ctan.zip` - Package for CTAN submission
+
+### Continuous Integration
+
+The project uses GitHub Actions for CI/CD:
+
+- **CI workflow** (`ci.yml`): Runs tests on every push and PR
+- **Release workflow** (`release.yml`): Creates releases when tags are pushed
+
+### Creating a Release
+
+1. Update the version in `jsonresume.sty` if needed
+2. Commit all changes
+3. Create and push a version tag:
+   ```bash
+   git tag v1.0.0
+   git push origin v1.0.0
+   ```
+4. The release workflow will automatically:
+   - Run tests
+   - Build the example PDF
+   - Create CTAN package
+   - Create a GitHub release with all artifacts
+
+## Publishing to CTAN
+
+### Prerequisites
+
+Before submitting to CTAN, ensure:
+
+1. **Package is stable** - All tests pass
+2. **Documentation is complete** - README covers all features
+3. **License is clear** - MIT license file included
+4. **Example works** - Example PDF generates correctly
+
+### Submission Steps
+
+1. **Build the CTAN package**:
+   ```bash
+   ./scripts/build-ctan.sh 1.0.0
+   ```
+
+2. **Go to CTAN Upload**: https://ctan.org/upload
+
+3. **Fill in the submission form**:
+
+   | Field | Value |
+   |-------|-------|
+   | **Package name** | `jsonresume` |
+   | **Summary** | LuaLaTeX package for rendering JSON Resume data |
+   | **Description** | A LuaLaTeX package that parses JSON Resume files (local or remote URL) and renders professional resumes. Supports the full JSON Resume schema with 12 sections, schema validation, and customizable formatting. |
+   | **Author** | Your name and email |
+   | **License** | MIT |
+   | **CTAN directory** | `/macros/luatex/latex/jsonresume` |
+   | **Topics** | `curriculum-vitae`, `luatex`, `json` |
+   | **Home page** | Your GitHub repository URL |
+   | **Bug tracker** | Your GitHub issues URL |
+   | **Repository** | Your GitHub repository URL |
+
+4. **Upload the package**: Select `dist/jsonresume-ctan.zip`
+
+5. **Submit and wait**: CTAN volunteers will review your submission (usually 1-3 days)
+
+### After CTAN Acceptance
+
+Once accepted on CTAN:
+
+1. The package will be available at `https://ctan.org/pkg/jsonresume`
+2. It will be included in TeX Live and MiKTeX updates
+3. Users can install via their TeX distribution's package manager
+
+### Updating the Package
+
+For updates, follow the same process:
+
+1. Increment version number
+2. Create a new git tag
+3. Submit updated package to CTAN
+4. In the upload form, select "Update" instead of "New package"
+
 ## License
 
 Copyright (c) 2026 Lukas Wolfsteiner <lukas@wolfsteiner.media>

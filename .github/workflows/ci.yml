@@ -1,0 +1,131 @@
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install TeX Live
+        uses: zauguin/install-texlive@v3
+        with:
+          packages: >
+            scheme-basic
+            luatex
+            luaotfload
+            fontspec
+            enumitem
+            xparse
+            l3kernel
+            l3packages
+            hyperref
+            geometry
+            lm
+            etoolbox
+            iftex
+            ifluatex
+            kvsetkeys
+            kvdefinekeys
+            kvoptions
+            ltxcmds
+            infwarerr
+            intcalc
+            bigintcalc
+            bitset
+            atbegshi
+            atveryend
+            rerunfilecheck
+            uniquecounter
+            refcount
+            hycolor
+            letltxmacro
+            auxhook
+            pdfescape
+            stringenc
+            pdftexcmds
+            url
+
+      - name: Install curl
+        run: sudo apt-get update && sudo apt-get install -y curl
+
+      - name: Run tests
+        run: |
+          cd tests
+          chmod +x run-tests.sh
+          ./run-tests.sh --skip-network
+
+      - name: Run network tests
+        run: |
+          cd tests
+          ./run-tests.sh
+        continue-on-error: true
+
+  build:
+    runs-on: ubuntu-latest
+    needs: test
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install TeX Live
+        uses: zauguin/install-texlive@v3
+        with:
+          packages: >
+            scheme-basic
+            luatex
+            luaotfload
+            fontspec
+            enumitem
+            xparse
+            l3kernel
+            l3packages
+            hyperref
+            geometry
+            lm
+            etoolbox
+            iftex
+            ifluatex
+            kvsetkeys
+            kvdefinekeys
+            kvoptions
+            ltxcmds
+            infwarerr
+            intcalc
+            bigintcalc
+            bitset
+            atbegshi
+            atveryend
+            rerunfilecheck
+            uniquecounter
+            refcount
+            hycolor
+            letltxmacro
+            auxhook
+            pdfescape
+            stringenc
+            pdftexcmds
+            url
+
+      - name: Install curl
+        run: sudo apt-get update && sudo apt-get install -y curl
+
+      - name: Build example PDF
+        run: |
+          cd example
+          lualatex --shell-escape --interaction=nonstopmode example.tex || true
+          lualatex --shell-escape --interaction=nonstopmode example.tex || true
+
+      - name: Upload example PDF
+        uses: actions/upload-artifact@v4
+        with:
+          name: example-pdf
+          path: example/example.pdf
