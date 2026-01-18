@@ -24,7 +24,7 @@ jobs:
         run: |
           VERSION=${{ steps.get_version.outputs.VERSION }}
           DATE=$(date +%Y/%m/%d)
-          sed -i "s/\[.*JSON Resume renderer/[$DATE v$VERSION JSON Resume renderer/" jsonresume.sty
+          sed -i "s|\[.*JSON Resume renderer|[$DATE v$VERSION JSON Resume renderer|" jsonresume.sty
 
       - name: Install TeX Live
         uses: zauguin/install-texlive@v4
