@@ -1,0 +1,46 @@
+{
+  "$schema": "https://raw.githubusercontent.com/jsonresume/resume-schema/master/schema.json",
+  "basics": {
+    "label": "Software Engineer",
+    "email": "test@example.com",
+    "url": "not-a-valid-url",
+    "location": "Should be an object not a string"
+  },
+  "unknownSection": {
+    "foo": "bar"
+  },
+  "work": [
+    {
+      "name": "Company A",
+      "position": "Developer",
+      "startDate": "invalid-date-format",
+      "endDate": "2024/01/15",
+      "highlights": "Should be an array"
+    },
+    {
+      "name": 12345,
+      "position": "Engineer",
+      "url": "ftp://invalid-protocol.com"
+    }
+  ],
+  "education": "Should be an array not a string",
+  "skills": [
+    {
+      "name": "Programming",
+      "keywords": "Should be an array"
+    }
+  ],
+  "languages": [
+    {
+      "language": 123,
+      "fluency": ["Should", "be", "string"]
+    }
+  ],
+  "projects": [
+    {
+      "name": "Test Project",
+      "startDate": "01-15-2024",
+      "keywords": {"should": "be array"}
+    }
+  ]
+}

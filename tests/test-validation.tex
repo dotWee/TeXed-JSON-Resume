@@ -1,0 +1,32 @@
+% test-validation.tex
+% Test validation and strict mode
+
+\documentclass[11pt,letterpaper]{article}
+\usepackage[margin=0.75in]{geometry}
+\usepackage[strict]{../jsonresume}
+
+\begin{document}
+
+\section*{Validation Test - Invalid Resume}
+
+This test loads an invalid resume file in strict mode.
+Warnings should appear in the log file.
+
+% Load invalid resume - this should trigger warnings
+\resumefromfile{invalid-resume.json}
+
+% Manual validation and summary
+\subsection*{Validation Summary}
+\resumevalidationsummary
+
+\subsection*{Warning Count}
+Number of validation warnings: \resumewarningcount
+
+\subsection*{Rendered Content (partial)}
+Despite validation issues, rendering should still work for valid fields:
+
+Name: \jrget{basics.name} (should be empty - missing)
+
+Label: \jrget{basics.label}
+
+\end{document}

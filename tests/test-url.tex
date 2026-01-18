@@ -1,0 +1,16 @@
+% test-url.tex
+% Test loading resume from remote URL
+
+\documentclass[11pt,letterpaper]{article}
+\usepackage[margin=0.75in]{geometry}
+\usepackage{../jsonresume}
+
+\begin{document}
+
+% Load from remote URL
+\resumefromurl{https://lukas.wolfsteiner.media/assets/resume.json}
+
+% Render full resume
+\renderresume
+
+\end{document}

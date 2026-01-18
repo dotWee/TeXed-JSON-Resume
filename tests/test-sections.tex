@@ -1,0 +1,25 @@
+% test-sections.tex
+% Test individual section rendering with custom titles
+
+\documentclass[11pt,letterpaper]{article}
+\usepackage[margin=0.75in]{geometry}
+\usepackage{../jsonresume}
+
+\begin{document}
+
+% Load from local file
+\resumefromfile{sample-resume.json}
+
+% Test basics section
+\resumebasics
+
+% Test work section with custom title
+\resumework[Work Experience]
+
+% Test education section with custom title  
+\resumeeducation[Academic Background]
+
+% Test skills section with custom title
+\resumeskills[Technical Skills]
+
+\end{document}

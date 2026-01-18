@@ -1,0 +1,35 @@
+% test-basic.tex
+% Test loading resume from local JSON file
+
+\documentclass[11pt,letterpaper]{article}
+\usepackage[margin=0.75in]{geometry}
+\usepackage{../jsonresume}
+
+\begin{document}
+
+% Load from local file
+\resumefromfile{sample-resume.json}
+
+% Test individual data access
+\section*{Data Access Tests}
+
+Name: \jrget{basics.name}
+
+Label: \jrget{basics.label}
+
+Email: \jrget{basics.email}
+
+First Work Position: \jrget{work.1.position}
+
+First Education Institution: \jrget{education.1.institution}
+
+First Skill: \jrget{skills.1.name}
+
+\newpage
+
+% Test full resume rendering
+\section*{Full Resume Render Test}
+
+\renderresume
+
+\end{document}

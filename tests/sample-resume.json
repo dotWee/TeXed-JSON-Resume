@@ -1,0 +1,255 @@
+{
+  "$schema": "https://raw.githubusercontent.com/jsonresume/resume-schema/master/schema.json",
+  "basics": {
+    "name": "Jane Doe",
+    "label": "Senior Software Engineer",
+    "email": "jane.doe@example.com",
+    "phone": "+1 (555) 123-4567",
+    "url": "https://janedoe.dev",
+    "summary": "Experienced software engineer with 8+ years of expertise in distributed systems, cloud infrastructure, and full-stack development. Passionate about building scalable solutions and mentoring engineering teams.",
+    "location": {
+      "city": "San Francisco",
+      "region": "CA",
+      "countryCode": "US"
+    },
+    "profiles": [
+      {
+        "network": "GitHub",
+        "username": "janedoe",
+        "url": "https://github.com/janedoe"
+      },
+      {
+        "network": "LinkedIn",
+        "username": "janedoe",
+        "url": "https://linkedin.com/in/janedoe"
+      }
+    ]
+  },
+  "work": [
+    {
+      "name": "TechCorp Inc.",
+      "position": "Senior Software Engineer",
+      "url": "https://techcorp.example.com",
+      "startDate": "2021-03",
+      "highlights": [
+        "Led migration of monolithic application to microservices, reducing deployment time by 70%",
+        "Designed and implemented real-time data pipeline processing 10M+ events daily",
+        "Mentored team of 5 junior engineers, improving team velocity by 40%"
+      ]
+    },
+    {
+      "name": "StartupXYZ",
+      "position": "Software Engineer",
+      "url": "https://startupxyz.example.com",
+      "startDate": "2018-06",
+      "endDate": "2021-02",
+      "highlights": [
+        "Built core authentication system serving 500K+ daily active users",
+        "Optimized database queries, reducing API response times by 60%",
+        "Implemented CI/CD pipeline reducing release cycles from weekly to daily"
+      ]
+    },
+    {
+      "name": "BigTech Solutions",
+      "position": "Junior Developer",
+      "startDate": "2016-01",
+      "endDate": "2018-05",
+      "highlights": [
+        "Developed REST APIs for internal tooling used by 200+ employees",
+        "Contributed to open-source projects with 1000+ GitHub stars"
+      ]
+    }
+  ],
+  "volunteer": [
+    {
+      "organization": "Code for Good",
+      "position": "Technical Lead",
+      "url": "https://codeforgood.org",
+      "startDate": "2019-01",
+      "summary": "Leading a team of volunteer developers building software for nonprofits",
+      "highlights": [
+        "Built donation tracking system for local food bank",
+        "Mentored 10+ new volunteer developers"
+      ]
+    }
+  ],
+  "education": [
+    {
+      "institution": "Stanford University",
+      "url": "https://stanford.edu",
+      "area": "Computer Science",
+      "studyType": "Master of Science",
+      "startDate": "2014-09",
+      "endDate": "2016-06",
+      "score": "3.9/4.0",
+      "courses": [
+        "Distributed Systems",
+        "Machine Learning",
+        "Algorithm Design"
+      ]
+    },
+    {
+      "institution": "UC Berkeley",
+      "url": "https://berkeley.edu",
+      "area": "Computer Science",
+      "studyType": "Bachelor of Science",
+      "startDate": "2010-09",
+      "endDate": "2014-05",
+      "score": "3.8/4.0"
+    }
+  ],
+  "awards": [
+    {
+      "title": "Outstanding Engineer Award",
+      "date": "2023-06",
+      "awarder": "TechCorp Inc.",
+      "summary": "Recognized for exceptional contributions to platform reliability"
+    },
+    {
+      "title": "Hackathon Winner",
+      "date": "2019-09",
+      "awarder": "SF Tech Week"
+    }
+  ],
+  "certificates": [
+    {
+      "name": "AWS Solutions Architect Professional",
+      "date": "2022-03",
+      "issuer": "Amazon Web Services",
+      "url": "https://aws.amazon.com/certification/"
+    },
+    {
+      "name": "Certified Kubernetes Administrator",
+      "date": "2021-08",
+      "issuer": "Cloud Native Computing Foundation"
+    }
+  ],
+  "publications": [
+    {
+      "name": "Scaling Microservices at TechCorp",
+      "publisher": "IEEE Software",
+      "releaseDate": "2023-01",
+      "url": "https://ieeexplore.ieee.org/example",
+      "summary": "Case study on scaling microservices architecture to handle 100M requests/day"
+    }
+  ],
+  "skills": [
+    {
+      "name": "Programming Languages",
+      "level": "Expert",
+      "keywords": [
+        "Python",
+        "Go",
+        "TypeScript",
+        "Java",
+        "Rust"
+      ]
+    },
+    {
+      "name": "Cloud & Infrastructure",
+      "level": "Expert",
+      "keywords": [
+        "AWS",
+        "Kubernetes",
+        "Docker",
+        "Terraform",
+        "CI/CD"
+      ]
+    },
+    {
+      "name": "Databases",
+      "level": "Advanced",
+      "keywords": [
+        "PostgreSQL",
+        "Redis",
+        "MongoDB",
+        "Elasticsearch"
+      ]
+    },
+    {
+      "name": "Frameworks",
+      "level": "Advanced",
+      "keywords": [
+        "React",
+        "Node.js",
+        "FastAPI",
+        "gRPC"
+      ]
+    }
+  ],
+  "languages": [
+    {
+      "language": "English",
+      "fluency": "Native"
+    },
+    {
+      "language": "Spanish",
+      "fluency": "Professional"
+    },
+    {
+      "language": "Mandarin",
+      "fluency": "Conversational"
+    }
+  ],
+  "interests": [
+    {
+      "name": "Open Source",
+      "keywords": [
+        "Contributor to Kubernetes",
+        "Maintainer of several npm packages"
+      ]
+    },
+    {
+      "name": "Rock Climbing",
+      "keywords": [
+        "Bouldering",
+        "Sport climbing"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "name": "John Smith, VP of Engineering at TechCorp",
+      "reference": "Jane is one of the most talented engineers I've worked with. Her ability to solve complex problems while mentoring others is exceptional."
+    }
+  ],
+  "projects": [
+    {
+      "name": "OpenMetrics Dashboard",
+      "description": "Open-source real-time metrics visualization platform",
+      "highlights": [
+        "10K+ GitHub stars",
+        "Used by 500+ companies worldwide"
+      ],
+      "keywords": [
+        "React",
+        "Go",
+        "Prometheus",
+        "Grafana"
+      ],
+      "startDate": "2020-01",
+      "url": "https://github.com/janedoe/openmetrics-dashboard",
+      "roles": [
+        "Creator",
+        "Lead Maintainer"
+      ]
+    },
+    {
+      "name": "CloudCost Optimizer",
+      "description": "CLI tool for optimizing cloud infrastructure costs",
+      "highlights": [
+        "Saves average 30% on cloud bills",
+        "Supports AWS, GCP, and Azure"
+      ],
+      "keywords": [
+        "Python",
+        "AWS",
+        "GCP",
+        "Azure"
+      ],
+      "startDate": "2021-06",
+      "endDate": "2022-12",
+      "url": "https://github.com/janedoe/cloudcost"
+    }
+  ]
+}

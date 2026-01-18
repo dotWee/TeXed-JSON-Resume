@@ -1,0 +1,43 @@
+% example.tex
+% FAANG-style minimal resume using jsonresume package
+% Compile with: lualatex --shell-escape example.tex
+
+\documentclass[11pt,letterpaper]{article}
+
+% Page geometry - standard FAANG resume margins
+\usepackage[
+    top=0.5in,
+    bottom=0.5in,
+    left=0.5in,
+    right=0.5in
+]{geometry}
+
+% No page numbers
+\pagestyle{empty}
+
+% Tight spacing
+\setlength{\parskip}{0pt}
+\setlength{\parindent}{0pt}
+
+% Load the JSON Resume package
+\usepackage{../jsonresume}
+
+% Hyperlink styling
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,
+    urlcolor=blue!70!black,
+    pdfauthor={JSON Resume},
+    pdftitle={Resume}
+}
+
+\begin{document}
+
+% Load resume data from URL
+% You can also use: \resumefromfile{path/to/resume.json}
+\resumefromurl{https://lukas.wolfsteiner.media/assets/resume.json}
+
+% Render the complete resume (all sections)
+\renderresume
+
+\end{document}

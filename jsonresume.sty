@@ -1,0 +1,241 @@
+% jsonresume.sty
+% LaTeX package for rendering JSON Resume data
+% Requires LuaLaTeX
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{jsonresume}[2026/01/18 JSON Resume renderer for LuaLaTeX v2.0]
+
+% Check for LuaTeX
+\RequirePackage{ifluatex}
+\ifluatex\else
+  \PackageError{jsonresume}{This package requires LuaLaTeX}{%
+    Please compile with lualatex instead of pdflatex or xelatex.}
+\fi
+
+% Required packages
+\RequirePackage{hyperref}
+\RequirePackage{enumitem}
+\RequirePackage{xparse}
+
+%-------------------------------------------------------------------------------
+% Package Options
+%-------------------------------------------------------------------------------
+
+% Strict mode flag
+\newif\ifjsonresume@strict
+\jsonresume@strictfalse
+
+% Declare options
+\DeclareOption{strict}{\jsonresume@stricttrue}
+\DeclareOption*{\PackageWarning{jsonresume}{Unknown option '\CurrentOption'}}
+\ProcessOptions\relax
+
+%-------------------------------------------------------------------------------
+% Load the Lua module
+%-------------------------------------------------------------------------------
+
+\directlua{
+  local path = kpse.find_file("jsonresume.lua", "lua")
+  if not path then
+    local dirs = {"./", "../", ""}
+    for _, dir in ipairs(dirs) do
+      local f = io.open(dir .. "jsonresume.lua", "r")
+      if f then f:close() path = dir .. "jsonresume.lua" break end
+    end
+  end
+  if path then
+    jsonresume = dofile(path)
+  else
+    error("jsonresume.lua not found")
+  end
+}
+
+% Set strict mode in Lua based on package option
+\ifjsonresume@strict
+  \directlua{jsonresume.strict = true}
+  \PackageInfo{jsonresume}{Strict validation mode enabled}
+\fi
+
+%-------------------------------------------------------------------------------
+% Loading Commands
+%-------------------------------------------------------------------------------
+
+% Load resume from a local JSON file
+% Usage: \resumefromfile{path/to/resume.json}
+\NewDocumentCommand{\resumefromfile}{m}{%
+  \directlua{jsonresume.load_file("\luaescapestring{#1}")}%
+}
+
+% Load resume from a URL
+% Usage: \resumefromurl{https://example.com/resume.json}
+\NewDocumentCommand{\resumefromurl}{m}{%
+  \directlua{jsonresume.load_url("\luaescapestring{#1}")}%
+}
+
+%-------------------------------------------------------------------------------
+% Validation Commands
+%-------------------------------------------------------------------------------
+
+% Manually trigger validation
+\NewDocumentCommand{\resumevalidate}{}{%
+  \directlua{jsonresume.validate()}%
+}
+
+% Print validation summary to document
+\NewDocumentCommand{\resumevalidationsummary}{}{%
+  \directlua{tex.sprint(jsonresume.escape_latex(jsonresume.get_validation_summary()))}%
+}
+
+% Get warning count
+\NewDocumentCommand{\resumewarningcount}{}{%
+  \directlua{tex.sprint(tostring(jsonresume.get_warning_count()))}%
+}
+
+%-------------------------------------------------------------------------------
+% Internal Helper Commands
+%-------------------------------------------------------------------------------
+
+% Get a value from the resume data
+\NewDocumentCommand{\jrget}{m}{%
+  \directlua{tex.sprint(jsonresume.get_escaped("\luaescapestring{#1}"))}%
+}
+
+% Get a raw value (not escaped)
+\NewDocumentCommand{\jrgetraw}{m}{%
+  \directlua{
+    local val = jsonresume.get("\luaescapestring{#1}")
+    if val then tex.sprint(tostring(val)) end
+  }%
+}
+
+% Check if a path exists
+\NewDocumentCommand{\jrifexists}{mmm}{%
+  \directlua{
+    if jsonresume.has("\luaescapestring{#1}") then
+      tex.sprint([[\unexpanded{#2}]])
+    else
+      tex.sprint([[\unexpanded{#3}]])
+    end
+  }%
+}
+
+%-------------------------------------------------------------------------------
+% Section Styling
+%-------------------------------------------------------------------------------
+
+% Section header style
+\NewDocumentCommand{\jrsectionheader}{m}{%
+  \vspace{0.8em}%
+  {\large\bfseries\MakeUppercase{#1}}%
+  \vspace{0.2em}%
+  \hrule height 0.4pt%
+  \vspace{0.5em}%
+}
+
+% Entry header (for work/education)
+\NewDocumentCommand{\jrentryheader}{mmmm}{%
+  % #1 = title/position, #2 = organization, #3 = location, #4 = dates
+  \noindent\textbf{#1}%
+  \ifx&#2&\else{ | #2}\fi%
+  \hfill\textit{#4}%
+  \ifx&#3&\else{\\\textit{#3}}\fi%
+  \par%
+}
+
+%-------------------------------------------------------------------------------
+% Section Commands - Core
+%-------------------------------------------------------------------------------
+
+% Basics Section (name, contact, summary)
+\NewDocumentCommand{\resumebasics}{}{%
+  \directlua{jsonresume.render_basics()}%
+}
+
+% Work Experience Section
+\NewDocumentCommand{\resumework}{O{Experience}}{%
+  \directlua{jsonresume.render_work("\luaescapestring{#1}")}%
+}
+
+% Education Section
+\NewDocumentCommand{\resumeeducation}{O{Education}}{%
+  \directlua{jsonresume.render_education("\luaescapestring{#1}")}%
+}
+
+% Skills Section
+\NewDocumentCommand{\resumeskills}{O{Skills}}{%
+  \directlua{jsonresume.render_skills("\luaescapestring{#1}")}%
+}
+
+%-------------------------------------------------------------------------------
+% Section Commands - Extended
+%-------------------------------------------------------------------------------
+
+% Volunteer Section
+\NewDocumentCommand{\resumevolunteer}{O{Volunteer Experience}}{%
+  \directlua{jsonresume.render_volunteer("\luaescapestring{#1}")}%
+}
+
+% Awards Section
+\NewDocumentCommand{\resumeawards}{O{Awards}}{%
+  \directlua{jsonresume.render_awards("\luaescapestring{#1}")}%
+}
+
+% Certificates Section
+\NewDocumentCommand{\resumecertificates}{O{Certifications}}{%
+  \directlua{jsonresume.render_certificates("\luaescapestring{#1}")}%
+}
+
+% Publications Section
+\NewDocumentCommand{\resumepublications}{O{Publications}}{%
+  \directlua{jsonresume.render_publications("\luaescapestring{#1}")}%
+}
+
+% Languages Section
+\NewDocumentCommand{\resumelanguages}{O{Languages}}{%
+  \directlua{jsonresume.render_languages("\luaescapestring{#1}")}%
+}
+
+% Interests Section
+\NewDocumentCommand{\resumeinterests}{O{Interests}}{%
+  \directlua{jsonresume.render_interests("\luaescapestring{#1}")}%
+}
+
+% References Section
+\NewDocumentCommand{\resumereferences}{O{References}}{%
+  \directlua{jsonresume.render_references("\luaescapestring{#1}")}%
+}
+
+% Projects Section
+\NewDocumentCommand{\resumeprojects}{O{Projects}}{%
+  \directlua{jsonresume.render_projects("\luaescapestring{#1}")}%
+}
+
+%-------------------------------------------------------------------------------
+% Combined Resume Commands
+%-------------------------------------------------------------------------------
+
+% Render core sections only (basics, work, education, skills)
+\NewDocumentCommand{\renderresumecore}{}{%
+  \resumebasics
+  \resumework
+  \resumeeducation
+  \resumeskills
+}
+
+% Render all available sections in standard order
+\NewDocumentCommand{\renderresume}{}{%
+  \resumebasics
+  \resumework
+  \resumevolunteer
+  \resumeeducation
+  \resumeawards
+  \resumecertificates
+  \resumepublications
+  \resumeskills
+  \resumelanguages
+  \resumeinterests
+  \resumeprojects
+  \resumereferences
+}
+
+\endinput

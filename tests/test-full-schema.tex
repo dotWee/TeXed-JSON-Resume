@@ -1,0 +1,19 @@
+% test-full-schema.tex
+% Test rendering all JSON Resume sections
+
+\documentclass[11pt,letterpaper]{article}
+\usepackage[margin=0.75in]{geometry}
+\usepackage{../jsonresume}
+
+\begin{document}
+
+% Load full sample resume
+\resumefromfile{sample-resume.json}
+
+% Test individual sections
+\section*{Full Schema Render Test}
+
+% Render all sections using the combined command
+\renderresume
+
+\end{document}
