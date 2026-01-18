@@ -80,7 +80,6 @@ jobs:
 
       - name: Create CTAN package
         run: |
-          sudo apt-get update && sudo apt-get install -y zip
           chmod +x scripts/build-ctan.sh
           ./scripts/build-ctan.sh ${{ steps.get_version.outputs.VERSION }}
 
