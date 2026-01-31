@@ -69,7 +69,7 @@ jobs:
             url
             xcolor
             listings
-            longtable
+            tools
             booktabs
             parskip
             fancyvrb

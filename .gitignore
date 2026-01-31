@@ -18,6 +18,7 @@
 
 # Build artifacts
 dist/
+jsonresume-doc.pdf
 
 # IDE
 .idea/
