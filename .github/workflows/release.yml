@@ -32,9 +32,9 @@ jobs:
           fi
 
       - name: Install TeX Live
-        uses: zauguin/install-texlive@v4
+        uses: teatimeguest/setup-texlive-action@v3
         with:
-          packages: >
+          packages: |
             scheme-basic
             luatex
             luaotfload
