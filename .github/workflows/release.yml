@@ -25,6 +25,11 @@ jobs:
           VERSION=${{ steps.get_version.outputs.VERSION }}
           DATE=$(date +%Y/%m/%d)
           sed -i "s|\[.*JSON Resume renderer|[$DATE v$VERSION JSON Resume renderer|" jsonresume.sty
+          # Update version in documentation
+          if [ -f jsonresume-doc.tex ]; then
+            sed -i "s|\\\\def\\\\packageversion{.*}|\\\\def\\\\packageversion{$VERSION}|" jsonresume-doc.tex
+            sed -i "s|\\\\def\\\\packagedate{.*}|\\\\def\\\\packagedate{$DATE}|" jsonresume-doc.tex
+          fi
 
       - name: Install TeX Live
         uses: zauguin/install-texlive@v4
@@ -62,9 +67,21 @@ jobs:
             stringenc
             pdftexcmds
             url
+            xcolor
+            listings
+            longtable
+            booktabs
+            parskip
+            fancyvrb
+            microtype
 
       - name: Install tools
         run: sudo apt-get update && sudo apt-get install -y curl zip
+
+      - name: Build documentation PDF
+        run: |
+          lualatex --interaction=nonstopmode jsonresume-doc.tex || true
+          lualatex --interaction=nonstopmode jsonresume-doc.tex || true
 
       - name: Build example PDF
         run: |
@@ -89,20 +106,38 @@ jobs:
           files: |
             dist/jsonresume.zip
             dist/jsonresume-ctan.zip
+            jsonresume-doc.pdf
             example/example.pdf
           body: |
             ## JSON Resume LaTeX Package v${{ steps.get_version.outputs.VERSION }}
             
+            A LuaLaTeX package for rendering JSON Resume data into professional resumes.
+            
+            ### What's New
+            - See commit history for changes in this release
+            
             ### Downloads
             - `jsonresume.zip` - Package files for manual installation
             - `jsonresume-ctan.zip` - CTAN submission package
+            - `jsonresume-doc.pdf` - Package documentation
             - `example.pdf` - Example output
             
             ### Installation
-            Extract `jsonresume.zip` to your project directory or to `~/texmf/tex/latex/jsonresume/`
             
-            ### CTAN Submission
-            Upload `jsonresume-ctan.zip` to https://ctan.org/upload
+            **From CTAN/TeX Live:** The package is available on CTAN at https://ctan.org/pkg/jsonresume
+            
+            **Manual:** Extract `jsonresume.zip` to your project directory or to `~/texmf/tex/latex/jsonresume/`
+            
+            ### Quick Start
+            ```latex
+            \documentclass{article}
+            \usepackage{jsonresume}
+            \begin{document}
+            \resumefromfile{resume.json}
+            \renderresume
+            \end{document}
+            ```
+            Compile with: `lualatex --shell-escape yourfile.tex`
           draft: false
           prerelease: false
 

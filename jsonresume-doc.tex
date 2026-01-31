@@ -1,0 +1,401 @@
+% jsonresume-doc.tex
+% Documentation for the jsonresume LaTeX package
+% Compile with: lualatex jsonresume-doc.tex
+
+\documentclass[11pt,a4paper]{article}
+
+% Page geometry
+\usepackage[
+    top=1in,
+    bottom=1in,
+    left=1in,
+    right=1in
+]{geometry}
+
+% Required packages
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{longtable}
+\usepackage{booktabs}
+\usepackage{parskip}
+\usepackage{fancyvrb}
+\usepackage{microtype}
+
+% Package version info (updated by build script)
+\def\packageversion{1.0.1}
+\def\packagedate{2026/01/31}
+
+% Hyperlink styling
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue!70!black,
+    urlcolor=blue!70!black,
+    citecolor=blue!70!black,
+    pdftitle={jsonresume Package Documentation},
+    pdfauthor={Lukas Wolfsteiner},
+    pdfsubject={LaTeX package for rendering JSON Resume data},
+    pdfkeywords={LaTeX, LuaLaTeX, JSON Resume, curriculum vitae, resume}
+}
+
+% Code listing style
+\lstset{
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{blue!70!black}\bfseries,
+    commentstyle=\color{green!50!black}\itshape,
+    stringstyle=\color{red!70!black},
+    backgroundcolor=\color{gray!10},
+    frame=single,
+    framerule=0.5pt,
+    rulecolor=\color{gray!50},
+    breaklines=true,
+    breakatwhitespace=true,
+    showstringspaces=false,
+    tabsize=2,
+    xleftmargin=1em,
+    xrightmargin=1em,
+    aboveskip=1em,
+    belowskip=1em
+}
+
+% Custom commands for documentation
+\newcommand{\pkg}[1]{\textsf{#1}}
+\newcommand{\cmd}[1]{\texttt{\textbackslash#1}}
+\newcommand{\meta}[1]{\textit{$\langle$#1$\rangle$}}
+\newcommand{\marg}[1]{\texttt{\{}\meta{#1}\texttt{\}}}
+\newcommand{\oarg}[1]{\texttt{[}\meta{#1}\texttt{]}}
+
+\title{%
+    \pkg{jsonresume} Package Documentation\\[0.5em]
+    \large A LuaLaTeX Package for Rendering JSON Resume Data\\[0.5em]
+    \normalsize Version \packageversion\ (\packagedate)
+}
+\author{Lukas Wolfsteiner\thanks{\url{mailto:lukas@wolfsteiner.media}}}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+The \pkg{jsonresume} package provides a simple way to render resume data from
+JSON Resume format files into professionally formatted LaTeX documents. It supports
+loading data from local files or remote URLs, includes optional schema validation,
+and provides commands for rendering individual sections or the complete resume.
+This package requires LuaLaTeX.
+\end{abstract}
+
+\tableofcontents
+
+\newpage
+
+%-------------------------------------------------------------------------------
+\section{Introduction}
+%-------------------------------------------------------------------------------
+
+The \pkg{jsonresume} package allows you to separate your resume content from its
+presentation. By storing your resume data in the standardized JSON Resume format
+(\url{https://jsonresume.org/}), you can:
+
+\begin{itemize}
+    \item Maintain a single source of truth for your resume data
+    \item Render your resume in different formats and styles
+    \item Load resume data from local files or web URLs
+    \item Validate your data against the JSON Resume schema
+\end{itemize}
+
+The package supports all 12 sections defined in the JSON Resume schema:
+basics, work, volunteer, education, awards, certificates, publications,
+skills, languages, interests, references, and projects.
+
+%-------------------------------------------------------------------------------
+\section{Requirements}
+%-------------------------------------------------------------------------------
+
+\begin{itemize}
+    \item \textbf{LuaLaTeX} -- This package requires LuaLaTeX and will not work
+          with pdfLaTeX or XeLaTeX.
+    \item \textbf{curl} -- Required for loading resume data from URLs. This is
+          pre-installed on most systems.
+    \item \textbf{Shell escape} -- Required for URL loading. Compile with
+          \texttt{--shell-escape} option.
+\end{itemize}
+
+%-------------------------------------------------------------------------------
+\section{Installation}
+%-------------------------------------------------------------------------------
+
+\subsection{From CTAN / TeX Live}
+
+If the package is installed via your TeX distribution (TeX Live, MiKTeX), it
+should be available automatically. Simply use:
+
+\begin{lstlisting}[language={[LaTeX]TeX}]
+\usepackage{jsonresume}
+\end{lstlisting}
+
+\subsection{Manual Installation}
+
+Copy \texttt{jsonresume.sty} and \texttt{jsonresume.lua} to either:
+
+\begin{enumerate}
+    \item Your project directory (alongside your \texttt{.tex} file), or
+    \item Your local texmf tree:
+\begin{lstlisting}[language=bash]
+mkdir -p ~/texmf/tex/latex/jsonresume
+cp jsonresume.sty jsonresume.lua ~/texmf/tex/latex/jsonresume/
+\end{lstlisting}
+\end{enumerate}
+
+%-------------------------------------------------------------------------------
+\section{Quick Start}
+%-------------------------------------------------------------------------------
+
+Here is a minimal example to get started:
+
+\begin{lstlisting}[language={[LaTeX]TeX}]
+\documentclass[11pt,letterpaper]{article}
+\usepackage[margin=0.5in]{geometry}
+\usepackage{jsonresume}
+
+\begin{document}
+
+% Load resume data from a file
+\resumefromfile{resume.json}
+
+% Render the complete resume
+\renderresume
+
+\end{document}
+\end{lstlisting}
+
+Compile with:
+\begin{lstlisting}[language=bash]
+lualatex --shell-escape yourfile.tex
+\end{lstlisting}
+
+%-------------------------------------------------------------------------------
+\section{Package Options}
+%-------------------------------------------------------------------------------
+
+\subsection{Strict Mode}
+
+Enable strict mode to receive warnings about schema violations:
+
+\begin{lstlisting}[language={[LaTeX]TeX}]
+\usepackage[strict]{jsonresume}
+\end{lstlisting}
+
+In strict mode, the package warns about:
+\begin{itemize}
+    \item Unknown top-level sections
+    \item Missing required fields (e.g., \texttt{basics.name})
+    \item Invalid date formats (should be YYYY, YYYY-MM, or YYYY-MM-DD)
+    \item Invalid URL formats
+    \item Type mismatches (e.g., string instead of array)
+\end{itemize}
+
+Warnings appear in the LaTeX log file.
+
+%-------------------------------------------------------------------------------
+\section{Commands}
+%-------------------------------------------------------------------------------
+
+\subsection{Loading Data}
+
+\begin{longtable}{@{}lp{8cm}@{}}
+\toprule
+\textbf{Command} & \textbf{Description} \\
+\midrule
+\endhead
+\cmd{resumefromfile}\marg{path} & Load resume data from a local JSON file \\
+\cmd{resumefromurl}\marg{url} & Load resume data from a remote URL (requires shell escape) \\
+\bottomrule
+\end{longtable}
+
+\subsection{Rendering Sections}
+
+\begin{longtable}{@{}lp{8cm}@{}}
+\toprule
+\textbf{Command} & \textbf{Description} \\
+\midrule
+\endhead
+\cmd{renderresume} & Render all available sections in standard order \\
+\cmd{renderresumecore} & Render core sections only (basics, work, education, skills) \\
+\cmd{resumebasics} & Render name, contact information, and summary \\
+\cmd{resumework}\oarg{title} & Render work experience section \\
+\cmd{resumevolunteer}\oarg{title} & Render volunteer experience section \\
+\cmd{resumeeducation}\oarg{title} & Render education section \\
+\cmd{resumeawards}\oarg{title} & Render awards and honors section \\
+\cmd{resumecertificates}\oarg{title} & Render certifications section \\
+\cmd{resumepublications}\oarg{title} & Render publications section \\
+\cmd{resumeskills}\oarg{title} & Render skills section \\
+\cmd{resumelanguages}\oarg{title} & Render languages section \\
+\cmd{resumeinterests}\oarg{title} & Render interests section \\
+\cmd{resumereferences}\oarg{title} & Render references section \\
+\cmd{resumeprojects}\oarg{title} & Render projects section \\
+\bottomrule
+\end{longtable}
+
+The optional \meta{title} argument allows you to customize the section heading.
+For example, \verb|\resumework[Professional Experience]| will use
+``Professional Experience'' instead of the default ``Experience''.
+
+\subsection{Validation Commands}
+
+\begin{longtable}{@{}lp{8cm}@{}}
+\toprule
+\textbf{Command} & \textbf{Description} \\
+\midrule
+\endhead
+\cmd{resumevalidate} & Manually trigger validation \\
+\cmd{resumevalidationsummary} & Print validation summary to document \\
+\cmd{resumewarningcount} & Output the number of validation warnings \\
+\bottomrule
+\end{longtable}
+
+\subsection{Data Access (Advanced)}
+
+For advanced users who want to access individual data fields:
+
+\begin{longtable}{@{}lp{8cm}@{}}
+\toprule
+\textbf{Command} & \textbf{Description} \\
+\midrule
+\endhead
+\cmd{jrget}\marg{path} & Get a value using dot notation \\
+\cmd{jrifexists}\marg{path}\marg{yes}\marg{no} & Conditional based on path existence \\
+\bottomrule
+\end{longtable}
+
+Example:
+\begin{lstlisting}[language={[LaTeX]TeX}]
+Name: \jrget{basics.name}
+Email: \jrget{basics.email}
+
+\jrifexists{basics.phone}{Phone: \jrget{basics.phone}}{}
+\end{lstlisting}
+
+%-------------------------------------------------------------------------------
+\section{JSON Resume Format}
+%-------------------------------------------------------------------------------
+
+The package supports the full JSON Resume schema. Here is an abbreviated example
+showing the structure:
+
+\begin{lstlisting}
+{
+  "basics": {
+    "name": "Jane Doe",
+    "label": "Software Engineer",
+    "email": "jane@example.com",
+    "phone": "+1-555-123-4567",
+    "url": "https://janedoe.dev",
+    "summary": "Experienced software engineer...",
+    "location": {
+      "city": "San Francisco",
+      "region": "CA",
+      "countryCode": "US"
+    },
+    "profiles": [
+      {
+        "network": "GitHub",
+        "username": "janedoe",
+        "url": "https://github.com/janedoe"
+      }
+    ]
+  },
+  "work": [
+    {
+      "name": "Company Name",
+      "position": "Software Engineer",
+      "startDate": "2020-01",
+      "endDate": "2023-12",
+      "highlights": ["Built features", "Led teams"]
+    }
+  ],
+  "education": [...],
+  "skills": [...],
+  "projects": [...]
+}
+\end{lstlisting}
+
+For the complete schema specification, see \url{https://jsonresume.org/schema/}.
+
+%-------------------------------------------------------------------------------
+\section{Custom Layout Example}
+%-------------------------------------------------------------------------------
+
+You can customize the order and titles of sections:
+
+\begin{lstlisting}[language={[LaTeX]TeX}]
+\documentclass[11pt]{article}
+\usepackage[margin=0.75in]{geometry}
+\usepackage[strict]{jsonresume}
+
+\begin{document}
+\resumefromfile{resume.json}
+
+% Custom order and custom titles
+\resumebasics
+\resumeskills[Technical Expertise]
+\resumework[Professional Experience]
+\resumeprojects[Side Projects]
+\resumeeducation[Academic Background]
+\resumecertificates[Professional Certifications]
+\resumelanguages
+
+\end{document}
+\end{lstlisting}
+
+%-------------------------------------------------------------------------------
+\section{Troubleshooting}
+%-------------------------------------------------------------------------------
+
+\subsection{``This package requires LuaLaTeX''}
+
+The package only works with LuaLaTeX. Make sure you compile with:
+\begin{lstlisting}[language=bash]
+lualatex --shell-escape yourfile.tex
+\end{lstlisting}
+
+\subsection{URL Loading Fails}
+
+If loading from URLs doesn't work:
+\begin{enumerate}
+    \item Ensure you're using the \texttt{--shell-escape} option
+    \item Verify that \texttt{curl} is installed and accessible
+    \item Check that the URL is accessible from your machine
+\end{enumerate}
+
+\subsection{Validation Warnings}
+
+If you see validation warnings in strict mode, check the LaTeX log file for details.
+Common issues include:
+\begin{itemize}
+    \item Date formats should be YYYY, YYYY-MM, or YYYY-MM-DD
+    \item URLs should include the protocol (https://)
+    \item Arrays (like \texttt{highlights}) should be JSON arrays, not strings
+\end{itemize}
+
+%-------------------------------------------------------------------------------
+\section{License}
+%-------------------------------------------------------------------------------
+
+Copyright \copyright\ 2026 Lukas Wolfsteiner
+
+This package is released under the MIT License. You are free to use, modify,
+and distribute this package, provided that the copyright notice and license
+terms are preserved.
+
+See the LICENSE file included with this package for the full license text.
+
+%-------------------------------------------------------------------------------
+\section{Bug Reports and Contributions}
+%-------------------------------------------------------------------------------
+
+Bug reports, feature requests, and contributions are welcome at:
+
+\url{https://github.com/dotWee/TeXed-JSON-Resume}
+
+\end{document}

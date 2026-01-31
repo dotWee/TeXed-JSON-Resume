@@ -1,0 +1,19 @@
+# Git attributes for jsonresume LaTeX package
+# These files/folders should be excluded from distribution archives
+
+# Exclude development files from archives
+.devcontainer/ export-ignore
+.github/ export-ignore
+.gitignore export-ignore
+.gitattributes export-ignore
+tests/ export-ignore
+scripts/ export-ignore
+
+# Keep essential files
+# jsonresume.sty
+# jsonresume.lua
+# jsonresume-doc.tex
+# jsonresume-doc.pdf (built during release)
+# README.md
+# LICENSE
+# example/
