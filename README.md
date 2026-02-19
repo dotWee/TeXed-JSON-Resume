@@ -17,8 +17,27 @@ A minimal LuaLaTeX package for rendering [JSON Resume](https://jsonresume.org/) 
 
 ## Installation
 
+### From CTAN/TeX Live
+
+This package is available on CTAN at <https://ctan.org/pkg/jsonresume> and can be installed via your TeX distribution's package manager.
+
+For example, on TeX Live, you can install the package with:
+
+```bash
+tlmgr install jsonresume
+```
+
+On MiKTeX, you can install the package with:
+
+```bash
+mpm --install jsonresume
+```
+
+### Manual Installation
+
 1. Copy `jsonresume.sty` and `jsonresume.lua` to your project directory, or
 2. Install to your local texmf tree:
+
    ```bash
    mkdir -p ~/texmf/tex/latex/jsonresume
    cp jsonresume.sty jsonresume.lua ~/texmf/tex/latex/jsonresume/
@@ -46,9 +65,14 @@ A minimal LuaLaTeX package for rendering [JSON Resume](https://jsonresume.org/) 
 ```
 
 Compile with:
+
 ```bash
 lualatex --shell-escape yourfile.tex
 ```
+
+### Advanced Example
+
+See the [example](./example/jsonresume-example.tex) for a more advanced example.
 
 ## Commands
 
@@ -104,6 +128,7 @@ Enable strict mode to get warnings about schema violations:
 ```
 
 In strict mode, the package warns about:
+
 - Unknown top-level sections
 - Missing required fields (e.g., `basics.name`)
 - Invalid date formats (should be YYYY, YYYY-MM, or YYYY-MM-DD)
@@ -197,6 +222,7 @@ Build the CTAN package locally:
 ```
 
 This creates:
+
 - `dist/jsonresume.zip` - Package for manual installation
 - `dist/jsonresume-ctan.zip` - Package for CTAN submission
 
@@ -217,6 +243,7 @@ The release workflow requires the following GitHub repository secrets for automa
 - `CTAN_EMAIL` - Your email address for CTAN correspondence. If updating an existing CTAN package, this should match the email associated with your CTAN account.
 
 To add these secrets:
+
 1. Go to your repository Settings > Secrets and variables > Actions
 2. Click "New repository secret"
 3. Add both `CTAN_UPLOADER_NAME` and `CTAN_EMAIL`
@@ -228,10 +255,12 @@ To add these secrets:
 1. Update the version in `jsonresume.sty` if needed
 2. Commit all changes
 3. Create and push a version tag:
+
    ```bash
    git tag v1.0.0
    git push origin v1.0.0
    ```
+
 4. The release workflow will automatically:
    - Run tests
    - Build the example PDF
@@ -249,6 +278,7 @@ The release workflow automatically submits packages to CTAN when a new version t
 2. **Package Already on CTAN** - The automatic submission uses `update: "true"` for existing packages
 
 When you create a release (see "Creating a Release" above), the workflow will:
+
 - Build the CTAN package
 - Create a GitHub release
 - Automatically submit to CTAN with the configured credentials
@@ -271,11 +301,12 @@ Before submitting to CTAN, ensure:
 #### Submission Steps
 
 1. **Build the CTAN package**:
+
    ```bash
    ./scripts/build-ctan.sh 1.0.0
    ```
 
-2. **Go to CTAN Upload**: https://ctan.org/upload
+2. **Go to CTAN Upload**: <https://ctan.org/upload>
 
 3. **Fill in the submission form**:
 
@@ -306,15 +337,17 @@ Once accepted on CTAN:
 
 ### Updating the Package
 
-For updates, the automatic submission will handle CTAN updates when you create a new release:
+For updates, the automatic submission will handle CTAN updates when a new release tag is pushed.
+Ensure you have the GitHub secrets configured for seamless updates.:
 
 1. Increment version number in `jsonresume.sty`
 2. Create and push a new git tag (e.g., `v1.1.0`)
 3. The release workflow automatically submits the update to CTAN
 
 For manual updates:
+
 1. Build the package with `./scripts/build-ctan.sh <version>`
-2. Go to https://ctan.org/upload
+2. Go to <https://ctan.org/upload>
 3. In the upload form, select "Update" instead of "New package"
 
 ## License
