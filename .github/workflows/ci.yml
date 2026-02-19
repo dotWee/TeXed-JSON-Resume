@@ -73,6 +73,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
 
       - name: Install TeX Live
         uses: zauguin/install-texlive@v4
@@ -125,3 +127,15 @@ jobs:
         with:
           name: example-pdf
           path: example/jsonresume-example.pdf
+
+      - name: Print upcoming changelog
+        run: |
+          LATEST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+          echo "## Upcoming changelog"
+          if [ -n "$LATEST_TAG" ]; then
+            echo "Changes since ${LATEST_TAG}:"
+          else
+            echo "Changes (no previous tag found):"
+          fi
+          echo ""
+          ./scripts/git-changelog.sh
