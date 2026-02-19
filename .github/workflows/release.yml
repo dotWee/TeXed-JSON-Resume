@@ -11,7 +11,7 @@ permissions:
 jobs:
   release:
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
@@ -86,8 +86,8 @@ jobs:
       - name: Build example PDF
         run: |
           cd example
-          lualatex --shell-escape --interaction=nonstopmode example.tex || true
-          lualatex --shell-escape --interaction=nonstopmode example.tex || true
+          lualatex --shell-escape --interaction=nonstopmode jsonresume-example.tex || true
+          lualatex --shell-escape --interaction=nonstopmode jsonresume-example.tex || true
 
       - name: Run tests
         run: |
@@ -107,10 +107,10 @@ jobs:
             dist/jsonresume.zip
             dist/jsonresume-ctan.zip
             jsonresume-doc.pdf
-            example/example.pdf
+            example/jsonresume-example.pdf
           body: |
             ## JSON Resume LaTeX Package v${{ steps.get_version.outputs.VERSION }}
-            
+          
             A LuaLaTeX package for rendering JSON Resume data into professional resumes.
             
             ### What's New
@@ -120,7 +120,7 @@ jobs:
             - `jsonresume.zip` - Package files for manual installation
             - `jsonresume-ctan.zip` - CTAN submission package
             - `jsonresume-doc.pdf` - Package documentation
-            - `example.pdf` - Example output
+            - `jsonresume-example.pdf` - Example output
             
             ### Installation
             

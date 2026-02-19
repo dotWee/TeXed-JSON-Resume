@@ -9,7 +9,7 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
@@ -117,11 +117,11 @@ jobs:
       - name: Build example PDF
         run: |
           cd example
-          lualatex --shell-escape --interaction=nonstopmode example.tex || true
-          lualatex --shell-escape --interaction=nonstopmode example.tex || true
+          lualatex --shell-escape --interaction=nonstopmode jsonresume-example.tex || true
+          lualatex --shell-escape --interaction=nonstopmode jsonresume-example.tex || true
 
       - name: Upload example PDF
         uses: actions/upload-artifact@v6
         with:
           name: example-pdf
-          path: example/example.pdf
+          path: example/jsonresume-example.pdf

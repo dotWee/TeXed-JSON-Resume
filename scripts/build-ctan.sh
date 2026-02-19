@@ -6,6 +6,7 @@
 # - Top-level directory must be the package name (jsonresume/)
 # - No hidden files or directories (.gitignore, .github/, .devcontainer/)
 # - Should include PDF documentation (jsonresume-doc.pdf)
+# - Should include example files (example/)
 
 set -e
 
@@ -58,9 +59,9 @@ fi
 
 # Copy example
 mkdir -p "$CTAN_DIR/example"
-cp example/example.tex "$CTAN_DIR/example/"
-if [ -f example/example.pdf ]; then
-    cp example/example.pdf "$CTAN_DIR/example/"
+cp example/jsonresume-example.tex "$CTAN_DIR/example/"
+if [ -f example/jsonresume-example.pdf ]; then
+    cp example/jsonresume-example.pdf "$CTAN_DIR/example/"
 fi
 
 # Verify no hidden files are included
