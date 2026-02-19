@@ -15,10 +15,22 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
 
       - name: Get version from tag
         id: get_version
         run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+
+      - name: Generate changelog
+        id: changelog
+        run: |
+          CURRENT_TAG=${GITHUB_REF#refs/tags/}
+          PREVIOUS_TAG=$(git describe --tags --abbrev=0 "${CURRENT_TAG}^" 2>/dev/null || echo "")
+          CHANGELOG=$(./scripts/git-changelog.sh "$PREVIOUS_TAG")
+          echo "CHANGELOG<<EOF" >> $GITHUB_OUTPUT
+          echo "$CHANGELOG" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
 
       - name: Update version in package
         run: |
@@ -114,7 +126,7 @@ jobs:
             A LuaLaTeX package for rendering JSON Resume data into professional resumes.
             
             ### What's New
-            - See commit history for changes in this release
+            ${{ steps.changelog.outputs.CHANGELOG }}
             
             ### Downloads
             - `jsonresume.zip` - Package files for manual installation
@@ -151,5 +163,7 @@ jobs:
             update: "true"
             pkg: jsonresume
             version: ${{ steps.get_version.outputs.VERSION }}
+            announcement: ${{ steps.changelog.outputs.CHANGELOG }}
             uploader: ${{ secrets.CTAN_UPLOADER_NAME }}
             email: ${{ secrets.CTAN_EMAIL }}
+            bugtracker: ${{ github.server_url }}/${{ github.repository }}/issues

@@ -2,9 +2,8 @@ name: CI
 
 on:
   push:
-    branches: [main, develop]
+
   pull_request:
-    branches: [main]
 
 jobs:
   test:
@@ -127,6 +126,15 @@ jobs:
         with:
           name: example-pdf
           path: example/jsonresume-example.pdf
+
+  changelog:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
 
       - name: Print upcoming changelog
         run: |
