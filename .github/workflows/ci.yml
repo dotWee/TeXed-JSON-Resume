@@ -122,7 +122,7 @@ jobs:
           lualatex --shell-escape --interaction=nonstopmode jsonresume-example.tex || true
 
       - name: Upload example PDF
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: example-pdf
           path: example/jsonresume-example.pdf
